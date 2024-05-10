@@ -1,0 +1,47 @@
+<%- include('partials/header') %>
+<div class="container mt-5">
+  <h2>Update Item</h2>
+  <form action="/retailer/updateItem/<%= item.id %>" method="post" enctype="multipart/form-data">
+    <div class="form-group">
+      <label for="name">Item Name:</label>
+      <input type="text" class="form-control" id="name" name="name" value="<%= item.name %>" required>
+    </div>
+
+    <div class="form-group">
+      <label for="price">Price:</label>
+      <input type="number" class="form-control" id="price" name="price" value="<%= item.price %>" required>
+    </div>
+
+    <div class="form-group">
+      <label for="quantity">Quantity:</label>
+      <input type="number" class="form-control" id="quantity" name="quantity" value="<%= item.quantity %>" required>
+    </div>
+
+    <div class="form-group">
+      <label for="units">Units:</label>
+      <input type="text" class="form-control" id="units" name="units" value="<%= item.units %>" required>
+    </div>
+
+    <div class="form-group">
+      <label for="description">Description:</label>
+      <textarea class="form-control" id="description" name="description" required><%= item.description %></textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="availability">Availability:</label>
+      <select class="form-control" id="availability" name="availability">
+        <option value="available">Available</option>
+        <option value="unavailable">Unavailable</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="itemImage">Item Image:</label>
+      <input type="file" class="form-control-file" id="itemImage" name="itemImage" accept="image/*">
+    </div>
+
+    <button type="submit" class="btn btn-primary">Update Item</button>
+  </form>
+</div>
+
+<%- include('partials/footer') %>

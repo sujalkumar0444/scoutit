@@ -1,0 +1,68 @@
+<%- include('partials/header') %>
+
+<div class="container mt-5">
+    <h2>Update Profile</h2>
+
+    <!-- Retailer Update Profile Form -->
+    <form action="/retailer/updateProfile" method="post" onsubmit="showGoOnlineButton()" class="update-profile-form">
+        <!-- Display existing retailer details -->
+        <div class="form-group">
+            <label for="fullName">Full Name:</label>
+            <input type="text" id="fullName" name="fullName" value="<%= retailer.full_name %>" required>
+        </div>
+
+        <div class="form-group">
+            <label for="shopName">Shop Name:</label>
+            <input type="text" id="shopName" name="shopName" value="<%= retailer.shop_name %>" required>
+        </div>
+
+        <div class="form-group">
+            <label for="phoneNumber">Phone Number:</label>
+            <input type="tel" pattern="[0-9]{10}" id="phoneNumber" name="phoneNumber" value="<%= retailer.phone_number %>" required>
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email (Optional):</label>
+            <input type="email" id="email" name="email" value="<%= retailer.email %>">
+        </div>
+
+        <!-- Location Update -->
+        <div class="form-group">
+            <label for="latitude">Latitude:</label>
+            <input type="text" id="latitude" name="latitude" value="<%= retailer.latitude %>" required>
+        </div>
+
+        <div class="form-group">
+            <label for="longitude">Longitude:</label>
+            <input type="text" id="longitude" name="longitude" value="<%= retailer.longitude %>" required>
+        </div>
+
+        <!-- Know My Location Button -->
+        <button type="button" onclick="knowMyLocation()" class="btn btn-secondary">Know My Location</button>
+
+        <!-- Update Profile Button -->
+        <button type="submit" class="btn btn-primary">Update Profile</button>
+
+        <!-- Go Online Button (initially hidden) -->
+        <!-- Add your Go Online button here -->
+
+    </form>
+</div>
+
+<script>
+    function knowMyLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition((position) => {
+                document.getElementById('latitude').value = position.coords.latitude;
+                document.getElementById('longitude').value = position.coords.longitude;
+            }, (error) => {
+                console.error('Error getting location:', error.message);
+                alert('Error getting location. Please enter manually.');
+            });
+        } else {
+            alert('Geolocation is not supported by your browser. Please enter manually.');
+        }
+    }
+</script>
+
+<%- include('partials/footer') %>

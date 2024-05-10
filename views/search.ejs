@@ -1,0 +1,109 @@
+<%- include('partials/header') %>
+<style>
+    body {
+        background-image: url('wp4313180.webp'); /* Replace 'your-image-path.jpg' with the actual image path */
+        background-size: cover;
+        background-position: center;
+        color: #000000; /* Set text color to white */
+    }
+
+    .search-box {
+        background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent black background */
+        border-radius: 10px;
+        padding: 20px;
+        margin: 50px auto;
+        width: 50%;
+        text-align: center;
+    }
+
+    h2 {
+        margin-bottom: 30px;
+    }
+
+    label {
+        font-size: 18px;
+        margin-right: 10px;
+    }
+
+    input {
+        padding: 10px;
+        font-size: 16px;
+        margin-right: 10px;
+        border: none;
+        border-radius: 5px;
+    }
+
+    button {
+        padding: 10px 20px;
+        font-size: 16px;
+        background-color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: #ddd; /* Change color on hover if needed */
+    }
+</style>
+<div>
+
+
+<!-- Search Bar -->
+
+<div class="search-box">
+<form id="myForm" action="/user/search" method="post">
+    <label for="itemName" style="color:white">Search Item:</label>
+    <input type="text" id="itemName" name="itemName" required>
+    <button type="button" onclick="knowMyLocation()">Search</button>
+
+    <!-- Hidden input fields for user's location -->
+    <input type="hidden" id="userLatitude" name="userLatitude">
+    <input type="hidden" id="userLongitude" name="userLongitude">
+</form>
+<a class="btn btn-light btn-lg" href="/user/logout" role="button" style="margin-left: 10px;">Log Out</a>
+</div>
+</div>
+<script>
+    function knowMyLocation() {
+        // Flag to check if the form should be submitted
+        let shouldSubmitForm = false;
+
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    var user_latitude = position.coords.latitude;
+                    var user_longitude = position.coords.longitude;
+
+                    // Set the flag to allow form submission
+                    shouldSubmitForm = true;
+
+                    // Update hidden input fields with user's location
+                    document.getElementById("userLatitude").value = user_latitude;
+                    document.getElementById("userLongitude").value = user_longitude;
+
+                    // If the flag is set, submit the form
+                    if (shouldSubmitForm) {
+                        submitForm();
+                    }
+                },
+                (error) => {
+                    console.error('Error getting location:', error.message);
+                    alert('Error getting location. Please enter manually.');
+                }
+            );
+        } else {
+            alert('Geolocation is not supported by your browser. Please enter manually.');
+        }
+
+        // Function to submit the form
+        function submitForm() {
+            // Get the form element
+            var form = document.getElementById("myForm");
+
+            // Submit the form
+            form.submit();
+        }
+    }
+</script>
+

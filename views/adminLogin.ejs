@@ -1,0 +1,44 @@
+<%- include('partials/header') %>
+
+<div class="container mt-5">
+  <div>
+  <h1 class="text-center">Admin Login</h1>
+</div>
+  <% if (locals.message){ %>
+    <p id="alert" class="alert alert-danger"><%=message%></p>
+    <script>
+      // Hide the alert after 7 seconds
+      setTimeout(() => {
+        const alert = document.getElementById('alert');
+        if (alert) {
+          alert.style.display = 'none';
+        }
+      }, 7000);
+    </script>
+  <% } %>
+
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-body">
+
+          <!-- Makes POST request to /login route -->
+          <form action="/admin/login" method="POST">
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" class="form-control" name="username" required>
+            </div>
+            <div class="form-group">
+              <label for="password">Password</label>
+              <input type="password" class="form-control" name="password" required>
+            </div>
+            <button type="submit" class="btn btn-dark btn-block">Login</button>
+          </form>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('partials/footer') %>

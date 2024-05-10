@@ -1,0 +1,117 @@
+<%- include('partials/header') %>
+
+<style>
+  h1 {
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+
+  div {
+    border: 1px solid #ddd;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+  }
+
+  h2 {
+    color: #333;
+    margin-bottom: 10px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+  }
+
+  th, td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+  }
+
+  th {
+    background-color: #f2f2f2;
+  }
+
+  .btn-danger {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .btn-danger:hover {
+    background-color: #c82333;
+  }
+
+  p {
+    color: #888;
+  }
+</style>
+
+<h1>Retailer Orders</h1>
+
+<% if (Object.keys(groupedOrders).length === 0) { %>
+<div>
+  <h1>No orders available.</h1>
+</div>
+<% } else { %>
+
+  <% Object.keys(groupedOrders).forEach(userId => { %>
+    <div>
+      <h2>Phone Number: <%= groupedOrders[userId][0].phone_number %></h2>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>Quantity</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% groupedOrders[userId].forEach(order => { %>
+            <tr>
+              <td><%= order.name %></td>
+              <td><%= order.quantity %> <%= order.units %></td>
+            </tr>
+          <% }); %>
+        </tbody>
+      </table>
+
+      <!-- Delete button for the entire user's order -->
+      <form action="/retailer/deleteOrder/<%= userId %>" method="post" onsubmit="return confirm('Are you sure you want to delete this order?');">
+        <input type="hidden" name="userId" value="<%= userId %>">
+        <button type="submit" class="btn btn-danger">Delete Entire Order</button>
+      </form>
+      <div>
+        <input type="text" id="orderMessage_<%= userId %>" placeholder="Type your message...">
+        <button type="button" class="btn btn-primary" onclick="sendMessage('<%= userId %>')">Send</button>
+      </div>
+    </div>
+  <% }); %>
+
+<% } %>
+<div>
+  <a href="/retailer/dashboard" class="btn btn-success" >Dashboard</a>
+</div>
+<script src="https://cdn.socket.io/4.0.1/socket.io.min.js"></script>
+    <script src="http://localhost:3000/socket.io/socket.io.js"></script>
+<script>
+  function sendMessage(userId) {
+    const messageInput = document.getElementById(`orderMessage_${userId}`);
+    const message = messageInput.value;
+
+    // Use Socket.IO to send the message to the user
+    const socket = io('http://localhost:3000');
+    socket.emit('sendMessageToUser', { userId, message });
+
+    // Optionally, you can update the UI to show that the message has been sent
+    // For example, you can display a confirmation message or change the button color
+    // based on whether the message was sent successfully or not.
+  }
+</script>
+<%- include('partials/footer') %>

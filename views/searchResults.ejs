@@ -1,0 +1,106 @@
+<%- include('partials/header') %>
+<style>
+  /* Add your custom styles here */
+
+  .no-results {
+    font-style: italic;
+  }
+
+  .search-results-list {
+    list-style: none;
+    padding: 0;
+  }
+
+  .search-result-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.3s ease-in-out;
+  }
+
+  .search-result-item:hover {
+    transform: scale(1.02);
+  }
+
+  .result-image img {
+  max-width: 150px;
+  max-height: 150px;
+  object-fit: cover;
+  margin-right: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add a subtle shadow for a cleaner look */
+}
+
+  .result-details {
+    flex-grow: 1;
+  }
+
+  .take-me-there-button,
+  .view-profile-button {
+    background-color: #06582b;
+    color: #fff;
+    padding: 8px 15px;
+    border: none;
+    cursor: pointer;
+    margin-right: 10px;
+    border-radius: 5px;
+  }
+
+  .view-profile-button {
+    background-color: #003366;
+  }
+
+</style>
+<div class="container mt-5">
+  <h2>Search Results for <%= itemName %></h2>
+
+  <% if (searchResults.length === 0) { %>
+    <p class="no-results">No results found for <%= itemName %>.</p>
+  <% } else { %>
+    <ul class="search-results-list">
+      <% searchResults.forEach(result => { %>
+        <li class="search-result-item">
+          <div class="result-image">
+            <img src="uploads/<%= result.image_path %>" alt="<%= result.name %>">
+          </div>
+          <div class="result-details">
+            <strong>Item: <%= result.name %></strong>
+            <br>Price: <%= result.price %> Rs / <%= result.quantity %> <%= result.units %>
+            <br>Description: <%= result.description %>
+            <br>Shop: <%= result.shop_name %>
+            <br>Owner: <%= result.full_name %>
+            <br>Phone: <%= result.phone_number %>
+            <br>Distance: <%= result.distance %> meters
+
+            <!-- "Take me there" Button -->
+            <button class="take-me-there-button" data-latitude="<%= result.latitude %>" data-longitude="<%= result.longitude %>">
+              Take me there
+            </button>
+            <!-- "View Shop Profile" Button -->
+            <form action="/user/viewProfile?retailerId=<%= result.retailer_id %>" method="get" style="display: inline-block;">
+              <input type="hidden" name="retailerId" value="<%= result.retailer_id %>">
+              <button type="submit" class="view-profile-button">View Shop Profile</button>
+            </form>
+          </div>
+        </li>
+      <% }); %>
+    </ul>
+  <% } %>
+
+  <script>
+    document.querySelectorAll('.take-me-there-button').forEach(button => {
+      button.addEventListener('click', function() {
+        const latitude = this.getAttribute('data-latitude');
+        const longitude = this.getAttribute('data-longitude');
+        const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}`;
+        window.open(googleMapsUrl, '_blank');
+      });
+    });
+  </script>
+  <a class="btn btn-light btn-lg" href="/user/logout" role="button">Log Out</a>
+</div>
+
+<%- include('partials/footer') %>

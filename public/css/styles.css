@@ -1,4 +1,4 @@
-
+/* 
 body {
   background-color: #E8ECEF;
 }
@@ -18,4 +18,180 @@ body {
 {
   color: red;
   font-family: Arial, Helvetica, sans-serif;
+} */
+/* Reset some default margin and padding */
+/* Reset some default margin and padding */
+
+.logo-container {
+  position: absolute;
+  top: 10px; /* Adjust the top position as needed */
+  left: 10px; /* Adjust the left position as needed */
+   z-index: 2; /*Ensure the logo is above the overlay */
 }
+
+.logo-container img {
+  width: 150px; /* Adjust the width of your logo as needed */
+  height: auto; /* Maintain the aspect ratio */
+  border-radius: 8px; /* Optional: Apply a border-radius for rounded corners */
+}
+
+
+.jumbotron {
+  position: relative;
+  text-align: center;
+  color: #fff; 
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.); 
+  pointer-events: none; 
+}
+
+
+.display-3 {
+  margin-bottom: 20px;
+}
+
+.lead {
+  font-size: 1.5rem;
+  margin-bottom: 30px;
+}
+
+.buttons {
+  margin-top: 40px;
+}
+
+.btn-lg {
+  margin-right: 10px;
+} */
+
+/* Style the buttons further if needed
+
+.userexists
+{
+  color: red;
+  font-family: Arial, Helvetica, sans-serif;
+}
+body, h1, h2, h3, p, ul, li {
+  margin: 0;
+  padding: 0;
+}
+
+/* Apply a clean and modern font to the body */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f4f4f4;
+  color: #333;
+}
+
+/* Center the content in the jumbotron */
+.jumbotron.centered {
+  text-align: center;
+  background-color: #007bff;
+  color: #fff;
+  padding: 50px 0;
+}
+
+/* Style buttons consistently */
+.btn {
+  display: inline-block;
+  padding: 12px 24px;
+  text-decoration: none;
+  color: #fff;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+/* Light button style */
+.btn-light {
+  background-color: #f8f9fa;
+  color: #333;
+}
+
+/* Dark button style */
+.btn-dark {
+  background-color: #343a40;
+  color: #fff;
+}
+
+/* Style the update and delete buttons in the item list */
+.take-me-there-button {
+  background-color: #28a745;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* Style form elements */
+form {
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 16px;
+  color: #333;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 20px;
+  box-sizing: border-box;
+  border: 1px solid #ced4da;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+/* Style card and card body */
+.card {
+  margin-bottom: 20px;
+  border: 1px solid #ced4da;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.card-body {
+  padding: 20px;
+}
+
+/* Style the container and add top margin */
+.container {
+  margin-top: 50px;
+}
+
+/* Style the table */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+th, td {
+  border: 1px solid #ced4da;
+  padding: 12px;
+  text-align: left;
+}
+
+/* Style the search bar */
+#myForm {
+  margin-bottom: 20px;
+}
+
+/* Responsive styling for smaller screens */
+@media (max-width: 767px) {
+  .container {
+    margin-top: 20px;
+  }
+}
+

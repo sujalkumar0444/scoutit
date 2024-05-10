@@ -1,0 +1,252 @@
+<%- include('partials/header') %>
+
+<div class="container mt-5">
+  <h2 class="text-center">Retailer Registration</h2>
+
+  <div id="messageDisplay"></div>
+
+  <% if (locals.message){ %>
+    <p id="alert" class="alert alert-danger"><%= message %></p>
+    <script>
+      // Hide the alert after 7 seconds
+      setTimeout(() => {
+        const alert = document.getElementById('alert');
+        if (alert) {
+          alert.style.display = 'none';
+        }
+      }, 7000);
+    </script>
+  <% } %>
+
+  <form action="/retailer/register" method="post" class="mt-3">
+    <div class="form-group">
+      <label for="full_name">Full Name:</label>
+      <input type="text" class="form-control" id="full_name" name="full_name" required>
+    </div>
+
+    <div class="form-group">
+      <label for="shop_name">Shop Name:</label>
+      <input type="text" class="form-control" id="shop_name" name="shop_name" required>
+    </div>
+
+    <div class="form-group">
+      <label for="phone_number">Phone Number (10 digits):</label>
+      <input type="tel" class="form-control" pattern="[0-9]{10}" id="phone_number" name="phone_number" required oninput="handlePhoneNumberInput()">
+      <button id="changeNumberBtn" onclick="changePhoneNumber(event)" class="btn btn-warning" style="margin-top: 5px; display: none;">Change Number</button>
+    </div>
+
+    <!-- Button to trigger OTP generation -->
+    <div>
+      <button id="generateOtpBtn" onclick="generateOtp(event)" class="btn btn-primary" style="margin-bottom: 10px;" disabled>Generate OTP</button>
+    </div>
+
+    <!-- OTP input field and Verify button (initially hidden) -->
+<div id="otpSection" style="display: none;">
+  <div class="form-group">
+    <label for="otp">Enter OTP:</label>
+    <input type="text" class="form-control" id="otp" name="otp" required oninput="handleOtpInput()">
+  </div>
+
+  <div>
+    <button id="verifyOtpBtn" onclick="verifyOtp(event)" class="btn btn-success" disabled>Verify OTP</button>
+  </div>
+</div>
+
+    <div class="form-group">
+      <label for="email">Email (optional):</label>
+      <input type="text" class="form-control" id="email" name="email">
+    </div>
+
+    <div class="form-group">
+      <label for="password">Password (at least 8 characters):</label>
+      <input type="password" class="form-control" id="password" name="password" required minlength="8">
+    </div>
+
+    <!-- Hidden input fields for latitude and longitude -->
+    <input type="hidden" id="latitudeInput" name="latitude" required>
+    <input type="hidden" id="longitudeInput" name="longitude" required>
+
+    <!-- Button to trigger geolocation -->
+    <div>
+    <button id="getLocationButton" onclick="getLocation(event)" class="btn btn-primary" style="margin-bottom: 10px;">Get My Location</button>
+</div>
+    <!-- Submit button, initially disabled -->
+    <div>
+      <input type="submit" id="submitBtn" value="Register" class="btn btn-success" disabled>
+    </div>
+  </form>
+
+  <script>
+
+    let count=0;
+    function getLocation(event) {
+      event.preventDefault();  // Prevent form submission
+
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition);
+      } else {
+        alert("Geolocation is not supported by this browser.");
+      }
+    }
+
+    function check() {
+      if (count==2) {
+        document.getElementById("submitBtn").disabled = false;
+      } else {
+        document.getElementById("submitBtn").disabled = true;
+      }
+    }
+
+
+    function showPosition(position) {
+      const latitude = position.coords.latitude;
+      const longitude = position.coords.longitude;
+
+      // Set values for hidden input fields
+      document.getElementById("latitudeInput").value = latitude;
+      document.getElementById("longitudeInput").value = longitude;
+
+      // Enable the submit button
+      count++;
+
+      // Disable the "Get My Location" button after obtaining location
+      document.getElementById("getLocationButton").disabled = true;
+      check();
+    }
+
+    function isValidPhoneNumber() {
+    const phoneNumber = document.getElementById("phone_number").value;
+    return /^\d{10}$/.test(phoneNumber);
+  }
+
+  // Function to handle phone number input
+  function handlePhoneNumberInput() {
+      const generateOtpBtn = document.getElementById("generateOtpBtn");
+
+      // Enable or disable the "Generate OTP" button based on the validity of the phone number
+      generateOtpBtn.disabled = !isValidPhoneNumber();
+
+      // Show or hide the "Change Number" button based on whether OTP has been generated
+    }
+
+    function handleOtpInput() {
+      const verifyOtpBtn = document.getElementById("verifyOtpBtn");
+      const otp = document.getElementById("otp").value;
+
+      // Enable or disable the "Verify OTP" button based on the length of the OTP
+      verifyOtpBtn.disabled = otp.length !== 6;
+    }
+
+    async function generateOtp(event) {
+      event.preventDefault();
+      document.getElementById('phone_number').disabled=true;
+      const phoneNumber = '+91' + document.getElementById('phone_number').value;
+
+      try {
+        const response = await fetch('/retailer/generateOtp', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ phone_number: phoneNumber })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          // Display the OTP input field and Verify button
+          document.getElementById('otpSection').style.display = 'block';
+
+          // Enable the Verify button
+
+          // Disable the "Generate OTP" button after generating OTP
+          document.getElementById('generateOtpBtn').disabled = true;
+
+          // Disable the phone number input after generating OTP
+          document.getElementById('phone_number').style.display = "none";
+
+          // Disable the "Change Number" button after generating OTP
+
+          // You can handle the success message as per your UI requirements
+          displayMessage('OTP sent successfully.');
+        } else {
+          displayMessage('Failed to send OTP. Please try again.');
+        }
+      } catch (error) {
+         document.getElementById('phone_number').value;
+        console.error(error);
+        document.getElementById('phone_number').disabled = false;
+        displayMessage('Failed to send OTP. Please try again.');
+      }
+    }
+
+    function changePhoneNumber(event) {
+      event.preventDefault();
+
+      // Reset the form to allow changing the phone number
+      count--;
+      check();
+      document.getElementById('changeNumberBtn').style.display = 'none';
+      document.getElementById('otpSection').style.display = 'none';
+      document.getElementById('generateOtpBtn').disabled = true;
+      document.getElementById('phone_number').style.display = 'block';
+      document.getElementById('phone_number').value = '';
+      document.getElementById('otp').value = '';
+
+      // You can handle additional reset logic as needed
+
+      // Clear any previous messages
+      clearMessage();
+    }
+
+  // Function to verify OTP
+  async function verifyOtp(event) {
+    event.preventDefault();
+
+    // Fetch the entered OTP from the input field
+    const phoneNumber = '+91' + document.getElementById('phone_number').value;
+    const enteredOtp = document.getElementById('otp').value;
+
+    try {
+      const response = await fetch('/retailer/verifyOtp', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({phone_number: phoneNumber, otp: enteredOtp })
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        count++;
+        check();
+        displayMessage('OTP Verified. You can now proceed with registration.');
+        document.getElementById('otpSection').style.display = 'none';
+        document.getElementById('changeNumberBtn').style.display = 'block';
+        // If OTP is verified, you can submit the form or take further actions
+      } else {
+        displayMessage('Invalid OTP. Please try again.');
+      }
+    } catch (error) {
+      console.error(error);
+      displayMessage('Failed to verify OTP. Please try again.');
+    }
+  }
+  
+  function displayMessage(message) {
+      const messageDisplay = document.getElementById('messageDisplay');
+      messageDisplay.innerHTML = `<p class="alert alert-info">${message}</p>`;
+      setTimeout(() => {
+        messageDisplay.innerHTML = '';
+      }, 5000);
+    }
+
+    function clearMessage() {
+      document.getElementById('messageDisplay').innerHTML = '';
+    }
+
+  </script>
+<!-- </div> -->
+
+<%- include('partials/footer') %>

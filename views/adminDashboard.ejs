@@ -1,0 +1,79 @@
+<%- include('partials/header') %>
+
+<div class="container mt-5">
+  <h1 class="mb-4">Admin Dashboard</h1>
+
+  <!-- Users Table -->
+  <div class="users-table mb-5">
+    <h2>Users</h2>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Email</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% users.forEach(user => { %>
+          <tr>
+            <td><%= user.id %></td>
+            <td><%= user.email %></td>
+            <td>
+              <!-- Add a form for each user with a delete button -->
+              <form action="/admin/deleteUser" method="post" class="d-inline" onsubmit="return confirmDelete();">
+                <input type="hidden" name="userId" value="<%= user.id %>">
+                <button type="submit" class="btn btn-danger">Delete</button>
+              </form>
+            </td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Retailers Table -->
+  <div class="retailers-table">
+    <h2>Retailers</h2>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Full Name</th>
+          <th>Shop Name</th>
+          <th>Phone Number</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% retailers.forEach(retailer => { %>
+          <tr>
+            <td><%= retailer.id %></td>
+            <td><%= retailer.full_name %></td>
+            <td><%= retailer.shop_name %></td>
+            <td><%= retailer.phone_number %></td>
+            <td>
+              <!-- Add a form for each retailer with a delete button -->
+              <form action="/admin/deleteRetailer" method="post" class="d-inline" onsubmit="return confirmDelete();">
+                <input type="hidden" name="retailerId" value="<%= retailer.id %>">
+                <button type="submit" class="btn btn-danger">Delete</button>
+              </form>
+            </td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Logout Button -->
+  <a class="btn btn-light btn-lg" href="/user/logout" role="button">Log Out</a>
+</div>
+
+<!-- Add JavaScript for the confirm delete prompt -->
+<script>
+  function confirmDelete() {
+    return confirm('Are you sure you want to delete this user or retailer?');
+  }
+</script>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,153 @@
+<%- include('partials/header') %>
+<div>
+<div class="container mt-5">
+  <h2>Retailer Dashboard</h2>
+  <p>Welcome to your dashboard, <%= retailer.full_name %>!</p>
+
+    <a href="/retailer/orders"  class="btn btn-info">View Orders <span class="badge badge-secondary"><%= orders %></span></a>
+    <input id="id" type="hidden" value=" <%= retailer.id %>">
+  <h2>Items List</h2>
+  <% if (items.length === 0) { %>
+    <p>No items available. <a href="/retailer/addItem" class="btn btn-primary">Add Item</a></p>
+  <% } else { %>
+    <div class="items-list">
+      <% items.forEach(item => { %>
+        <div class="item">
+          <img src="uploads/<%=item.image_path%>" alt="<%= item.name %>">
+          <div class="item-details">
+            <h3><%= item.name %></h3>
+            <p><strong>Price:</strong> <%= item.price %> Rs / <%= item.quantity %> <%= item.units %></p>
+            <p><strong>Description:</strong> <%= item.description %></p>
+            <p><strong>Status:</strong> <%= item.availability %></p>
+          </div>
+          <div class="item-actions">
+            <form style="display: inline;" action="/retailer/update/<%= item.id %>" method="post">
+              <input type="hidden" name="itemId" value="<%= item.id %>">
+              <button type="submit"  class="btn btn-secondary">update</button>
+            </form>
+            <form style="display: inline;" action="/retailer/deleteItem/<%= item.id %>" method="post" onsubmit="return confirm('Are you sure you want to delete this item?');">
+              <input type="hidden" name="itemId" value="<%= item.id %>">
+              <button type="submit"  class="btn btn-danger">Delete</button>
+            </form>
+          </div>
+        </div>
+      <% }); %>
+    </div>
+     
+    <!-- <div id="app">
+ 
+     
+    </div> -->
+
+    <div class="dashboard-actions">
+      <form action="/retailer/toggleOnlineStatus" method="post">
+        <button type="submit" class="btn <%= retailer.is_online ? 'btn-danger' : 'btn-success' %>">
+          <%= retailer.is_online ? 'Go Offline' : 'Go Online' %>
+        </button>
+      </form>
+      <a href="/retailer/addItem" class="btn btn-primary">Add Item</a>
+    </div>
+  <% } %>
+
+  <div class="profile-actions">
+    <a href="/retailer/updateProfile" style="margin-bottom: 10px;" class="btn btn-info">Update Profile</a>
+    <p><a href="/retailer/logout" class="btn btn-warning">Logout</a></p>
+  </div>
+</div>
+</div>
+<%- include('partials/footer') %>
+
+<style>
+  .items-list {
+    margin-top: 20px;
+  }
+
+  .item {
+    display: flex;
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-bottom: 10px;
+  }
+
+  .item img {
+    max-width: 100px;
+    max-height: 100px;
+    margin-right: 10px;
+    border-radius: 5px;
+  }
+
+  .item-details {
+    flex-grow: 1;
+  }
+
+  .item-actions {
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+  }
+
+  .dashboard-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+  }
+
+  .dashboard-actions button {
+    cursor: pointer;
+  }
+
+  .profile-actions {
+    margin-top: 20px;
+  }
+</style>
+<script src="https://cdn.socket.io/4.0.1/socket.io.min.js"></script>
+<script src="http://localhost:3000/socket.io/socket.io.js"></script>
+<script>
+  const socket = io('http://localhost:3000');
+  const retailerId = document.getElementById('id').value;
+ 
+  socket.emit('join', `retailer_${retailerId.trim()}`);
+  
+  // Add a log statement to see if this code is reached
+  Notification.requestPermission();
+
+  socket.on('newOrder', () => {
+    // Add a log statement to see if this code is reached
+    if (Notification.permission === 'granted') {
+      const notification = new Notification('New Order Received!', {
+        icon: 'logo.png', // Replace with the path to your notification icon
+        body: 'You have a new order.'
+      });
+
+      // You can also add an event listener for user interaction with the notification
+      notification.addEventListener('click', () => {
+        // Handle notification click, e.g., redirect to the orders page
+        window.location.href = '/retailer/orders';
+      });
+    }
+    // Handle the new order notification, e.g., show an alert
+    // alert('New order received!');
+  });
+
+  // document.addEventListener('click', function (event) {
+  //   const target = event.target;
+  //   if (target.tagName === 'A' && target.getAttribute('data-link') === 'ejs') {
+  //     event.preventDefault();
+  //     const href = target.getAttribute('href');
+  //     navigateTo(href);
+  //   }
+  // });
+
+  // // Navigate to a new page and update URL
+  // function navigateTo(url) {
+  //   fetch(url)
+  //     .then(response => response.text())
+  //     .then(html => {
+  //       document.getElementById('app').innerHTML = html;
+  //       // You may need to reinitialize any JavaScript functionalities on the new content
+  //     })
+  //     .catch(error => console.error('Error fetching page:', error));
+  // }
+</script>

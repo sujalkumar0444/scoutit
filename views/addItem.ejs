@@ -1,0 +1,56 @@
+<%- include('partials/header') %>
+
+<div class="container mt-5">
+  <h1>Add Item</h1>
+  <form action="/retailer/addItem" method="post" enctype="multipart/form-data">
+    <div class="form-group">
+      <label for="itemName">Item Name:</label>
+      <input type="text" class="form-control" id="itemName" name="itemName" required>
+    </div>
+
+    <div class="form-group">
+      <label for="itemPrice">Item Price (in Rupees):</label>
+      <input type="number" class="form-control" id="itemPrice" name="itemPrice" required>
+    </div>
+
+    <div class="form-group">
+      <label for="itemQuantity">Item Quantity:</label>
+      <input type="number" class="form-control" id="itemQuantity" name="itemQuantity" required>
+    </div>
+
+    <div class="form-group">
+      <label for="itemUnits">Units:</label>
+      <select class="form-control" id="itemUnits" name="itemUnits" required>
+        <option value="kg">Kilogram (kg)</option>
+        <option value="g">Gram (g)</option>
+        <option value="packet">Packet</option>
+        <!-- Add more unit options as needed -->
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="itemDescription">Description:</label>
+      <textarea class="form-control" id="itemDescription" name="itemDescription"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="itemImage">Item Image:</label>
+      <input type="file" class="form-control-file" id="itemImage" name="itemImage" accept="image/*" required>
+    </div>
+
+    <div class="form-group">
+      <label for="itemStatus">Status:</label>
+      <select class="form-control" id="itemStatus" name="itemStatus" required>
+        <option value="available">Available</option>
+        <option value="unavailable">Unavailable</option>
+      </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Add Item</button>
+  </form>
+  <div>
+  <a href="/retailer/dashboard" class="btn btn-success" >Dashboard</a>
+</div>
+</div>
+
+<%- include('partials/footer') %>
